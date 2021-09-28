@@ -1,0 +1,13 @@
+image: atlassian/default-image:2
+
+pipelines:
+  default:
+    - step:
+        script: # This will deploy required version of app to ecs Variables ---> # IMAGE_URL # TAG
+          - sleep 10
+          - IMAGE_URL=ECR Image path\
+          - TAGS=latest
+          - printf '[{"name":"aws-codepipeline","imageUri":"%s"}]' $IMAGE_URL:$TAGS > aws-codepipeline.json
+          - zip aws-codepipeline.zip aws-codepipeline.json
+          - apt-get update && apt-get install -y awscli
+          - aws s3 cp aws-codepipeline.zip s3://s3-bucket path/aws-codepipeline/aws-codepipeline.zip
