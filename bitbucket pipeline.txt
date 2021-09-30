@@ -1,0 +1,13 @@
+image: atlassian/default-image:2
+
+pipelines:
+  default:
+    - step:
+        script: # This will deploy required version of app to ecs Variables ---> # IMAGE_URL # TAG
+          - sleep 10
+          - IMAGE_URL=837609413077.dkr.ecr.us-east-1.amazonaws.com/demo-poc-production-ecr
+          - TAGS=latest
+          - printf '[{"name":"demo-poc-aws-codepipeline","imageUri":"%s"}]' $IMAGE_URL:$TAGS > demo-poc-aws-codepipeline.json
+          - zip demo-poc-aws-codepipeline.zip demo-poc-aws-codepipeline.json
+          - apt-get update && apt-get install -y awscli
+          - aws s3 cp demo-poc-aws-codepipeline.zip s3://demo-poc-codepipeline-bucket/aws-demo-poc-codepipeline-bucket/demo-poc-aws-codepipeline.zip
