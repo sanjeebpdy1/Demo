@@ -1,0 +1,20 @@
+image: hashicorp/terraform
+
+pipelines:
+  branches:
+    # master is the production branch.
+    main:
+        - step:
+           deployment: test
+           trigger: automatic
+           script:
+          
+          #
+          # Provision Terraform resources
+          #
+                            
+           - terraform init
+           - terraform validate 
+           - terraform apply -auto-approve
+           - terraform output alb_hostname
+          
